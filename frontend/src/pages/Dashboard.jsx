@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import client from "../api/client.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import NoteCard from "../components/NoteCard.jsx";
@@ -18,6 +18,8 @@ const Dashboard = () => {
   const [loadError, setLoadError] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [toast, setToast] = useState("");
+  const toastTimerRef = useRef(null);
 
   const fetchNotes = async () => {
     try {
@@ -36,12 +38,32 @@ const Dashboard = () => {
     fetchNotes();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) {
+        clearTimeout(toastTimerRef.current);
+      }
+    };
+  }, []);
+
   const sortedNotes = useMemo(
     () => [...notes].sort((left, right) => new Date(right.updatedAt) - new Date(left.updatedAt)),
     [notes]
   );
 
   const latestNote = sortedNotes[0] || null;
+
+  const showToast = (message) => {
+    setToast(message);
+
+    if (toastTimerRef.current) {
+      clearTimeout(toastTimerRef.current);
+    }
+
+    toastTimerRef.current = setTimeout(() => {
+      setToast("");
+    }, 2200);
+  };
 
   const filteredNotes = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
@@ -142,6 +164,21 @@ const Dashboard = () => {
     }
   };
 
+  const handleTogglePin = async (note) => {
+    try {
+      setError("");
+
+      await client.put(`/notes/${note._id}`, {
+        isPinned: !note.isPinned,
+      });
+
+      showToast(note.isPinned ? "Note unpinned" : "Note pinned to the top");
+      await fetchNotes();
+    } catch (requestError) {
+      setError(getApiErrorMessage(requestError, "Unable to update pin state"));
+    }
+  };
+
   const activeNote = selectedNote || sortedNotes[0] || null;
 
   return (
@@ -167,6 +204,12 @@ const Dashboard = () => {
       </aside>
 
       <main className="dashboard-grid">
+        {toast ? (
+          <div className="toast-banner" role="status" aria-live="polite">
+            {toast}
+          </div>
+        ) : null}
+
         <section className="dashboard-hero">
           <div>
             <span className="eyebrow">Smart notes workspace</span>
@@ -257,6 +300,7 @@ const Dashboard = () => {
                       onView={handleView}
                       onEdit={handleEdit}
                       onDelete={handleDelete}
+                      onTogglePin={handleTogglePin}
                     />
                   ))
                 : null}

@@ -45,9 +45,17 @@ const editNote = async (userId, noteId, updateData) => {
   assertObjectId(noteId, "note id");
   await getNote(userId, noteId);
   const cleaned = validateNoteInput(updateData, { partial: true });
-  const updatedNote = await updateNoteById(noteId, {
+  const nextUpdate = {
     ...cleaned,
-    ...(cleaned.timeline ? { timeline: cleaned.timeline } : {}),
+  };
+
+  if (typeof updateData.isPinned === "boolean") {
+    nextUpdate.isPinned = updateData.isPinned;
+  }
+
+  const updatedNote = await updateNoteById(noteId, {
+    ...nextUpdate,
+    ...(nextUpdate.timeline ? { timeline: nextUpdate.timeline } : {}),
   });
 
   return updatedNote;

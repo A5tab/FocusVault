@@ -28,6 +28,14 @@ JWT_SECRET=change-this-secret
 CORS_ORIGIN=http://localhost:5173,http://localhost:4173
 ```
 
+### Frontend Environment
+
+Create `frontend/.env` with the value below:
+
+```env
+VITE_API_BASE_URL=http://localhost:3000/api/v1
+```
+
 ### Install Dependencies
 
 ```bash
@@ -75,3 +83,4 @@ Base path: `/api/v1`
 
 - The backend runs on port `3000`.
 - The frontend uses `VITE_API_BASE_URL=http://localhost:3000/api/v1`.
+- Notes can be pinned so important items stay at the top of the list.

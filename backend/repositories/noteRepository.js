@@ -1,7 +1,7 @@
 import Note from "../models/Note.js";
 
 const listNotesByUser = (userId) =>
-  Note.find({ "author.userId": userId }).sort({ updatedAt: -1 });
+  Note.find({ "author.userId": userId }).sort({ isPinned: -1, updatedAt: -1 });
 
 const findNoteById = (noteId) => Note.findById(noteId);
 const createNote = (noteData) => Note.create(noteData);

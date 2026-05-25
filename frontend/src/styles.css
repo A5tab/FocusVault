@@ -242,6 +242,21 @@ button.danger {
   margin-bottom: 1rem;
 }
 
+.toast-banner {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  align-self: start;
+  justify-self: end;
+  margin-bottom: -0.5rem;
+  padding: 0.85rem 1rem;
+  border-radius: 999px;
+  background: rgba(17, 33, 38, 0.9);
+  color: #fff;
+  box-shadow: 0 16px 32px rgba(17, 33, 38, 0.18);
+  backdrop-filter: blur(10px);
+}
+
 .dashboard-shell {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
@@ -444,6 +459,26 @@ button.danger {
   margin-bottom: 0.65rem;
 }
 
+.note-card__flags {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.note-card__badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem;
+  background: rgba(21, 107, 90, 0.12);
+  color: var(--primary-strong);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .note-card p {
   margin: 0;
   line-clamp: 4;
@@ -545,5 +580,10 @@ button.danger {
   .notes-toolbar {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .toast-banner {
+    justify-self: stretch;
+    text-align: center;
   }
 }
